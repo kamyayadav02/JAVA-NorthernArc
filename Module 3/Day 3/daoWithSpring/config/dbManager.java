@@ -1,4 +1,4 @@
-package config;
+package dbManager;
 
 
 import java.sql.Connection;

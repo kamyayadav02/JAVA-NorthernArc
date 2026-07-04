@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Employee CRUD</title>
+
+    <style>
+        #content {
+            color: red;
+            font-size: 50px;
+        }
+
+        button,
+        input {
+            color: white;
+            background-color: black;
+            border: 4px outset grey;
+            font-size: 50px;
+        }
+
+        button:hover {
+            border: 4px inset grey;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <input type="text" id="additem" placeholder="Enter Name / Email">
+
+    <button onclick="add()">Add</button>
+
+    <button onclick="sortdemo()">Sort</button>
+
+    <button onclick="rsortdemo()">Reverse Sort</button>
+    
+
+
+
+    <div id="content"></div>
+
+    <script>
+
+        var names = [];
+
+        window.onload = function () {
+            getAll();
+        };
+
+        function getAll() {
+
+            fetch("http://localhost:8080/api/employees")
+                .then((response) => {
+                    return response.json();
+                })
+                .then((data) => {
+
+                    console.log(data);
+
+                    names = data;
+
+                    drawlist();
+                })
+                .catch((err) => {
+
+                    console.log(
+                        "There was some problem in contacting the server: " + err
+                    );
+                });
+        }
+
+        function drawlist() {
+
+            var content = "<ol>";
+
+            for (let i = 0; i < names.length; i++) {
+
+                content += `
+                    <li>
+                        ${names[i].name.toUpperCase()}
+                        (${names[i].dept || "No Department"})
+
+                        <button onclick="removeEmployee(${names[i].id})">
+                            Remove
+                        </button>
+
+                        <button onclick="update(${i})">
+                            Update
+                        </button>
+                    </li>
+                `;
+            }
+
+            content += "</ol>";
+
+            document.getElementById("content").innerHTML = content;
+        }
+
+        function add() {
+
+            var name = document.getElementById("additem").value;
+
+            if (name.trim() === "")
+                return;
+
+            var employee = {
+                name: name,
+                dept: "IT",
+                email: name.toLowerCase() + "@gmail.com"
+            };
+
+            fetch("http://localhost:8080/api/employees", {
+
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify(employee)
+
+            })
+            .then(response => response.json())
+            .then(data => {
+
+                console.log(data);
+
+                document.getElementById("additem").value = "";
+
+                getAll();
+            });
+        }
+
+        function removeEmployee(id) {
+
+            fetch(`http://localhost:8080/api/employees/${id}`, {
+
+                method: "DELETE"
+
+            })
+            .then(() => {
+
+                getAll();
+
+            })
+            .catch(err => {
+
+                console.log(err);
+
+            });
+        }
+
+        function update(i) {
+
+            var newEmail =
+                document.getElementById("additem").value;
+
+            if (newEmail.trim() === "")
+                return;
+
+            fetch(
+                `http://localhost:8080/api/employees/update/${names[i].name}/${newEmail}`,
+                {
+                    method: "PUT"
+                }
+            )
+            .then(response => response.text())
+            .then(data => {
+
+                console.log(data);
+
+                document.getElementById("additem").value = "";
+
+                getAll();
+
+            })
+            .catch(err => {
+
+                console.log(err);
+
+            });
+        }
+
+        function sortdemo() {
+
+            names.sort(function (a, b) {
+
+                return a.name.localeCompare(b.name);
+
+            });
+
+            drawlist();
+        }
+
+        function rsortdemo() {
+
+            names.sort(function (a, b) {
+
+                return b.name.localeCompare(a.name);
+
+            });
+
+            drawlist();
+        }
+
+    </script>
+
+</body>
+
+</html>

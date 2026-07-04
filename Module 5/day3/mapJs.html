@@ -1,0 +1,22 @@
+<html>
+<head>
+    <title>First Document</title>
+</head>
+<body>
+    <button onclick="demo()">Click me for magic</button>
+    <div id="content"></div>
+
+    <script>
+        function demo() {
+            var names = ["Sachin", "Saurav", "Rahul", "Yuvraj"];
+
+            var html = names
+                .map(name => `<h1>Hello ${name}</h1>`)
+                .join("");
+                alert(content);
+
+            document.getElementById("content").innerHTML = html;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .tabs {
+            display: flex;
+            gap: 10px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            border-radius: 5px;
+            background-color: #f5f5f5;
+        }
+
+        .tab.active {
+            background-color: #0078d4;
+            color: white;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="tabs">
+    <div class="tab active" onclick="selectTab(this)">Sachin</div>
+    <div class="tab" onclick="selectTab(this)">Saurav</div>
+    <div class="tab" onclick="selectTab(this)">Rahul</div>
+</div>
+
+<script>
+    function selectTab(clickedTab) {
+        // Remove active class from all tabs
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.classList.remove('active');
+        });
+
+        // Add active class to clicked tab
+        clickedTab.classList.add('active');
+    }
+</script>
+
+</body>
+</html>
